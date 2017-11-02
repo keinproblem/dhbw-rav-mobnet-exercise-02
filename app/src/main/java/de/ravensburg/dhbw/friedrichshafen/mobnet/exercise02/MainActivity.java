@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,22 +20,43 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import java.util.concurrent.ConcurrentLinkedQueue;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private final IntentFilter intentFilter = new IntentFilter();
     private WifiManager wifiManager;
-    private WifiInfoDataListener wifiInfoDataListener = new WifiInfoDataListener();
-    private boolean isBroadcastReceiverRegistered = false;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())) {
-                //WifiInfo wifiInfo = intent.getParcelableExtra(WifiManager.EXTRA_WIFI_INFO);
-                if (wifiManager != null)
-                    wifiInfoDataListener.propagate(WifiInfoData.fromWifiInfo(wifiManager.getConnectionInfo()));
+                String wifiState = "Unavailable";
+                String fiveGhzSupport = "Unknown";
+                switch (intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)) {
+                    case WifiManager.WIFI_STATE_ENABLED:
+                        wifiState = "Wifi Enabled";
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                            fiveGhzSupport = wifiManager.is5GHzBandSupported() ? "Yes" : "No";
+                        break;
+                    case WifiManager.WIFI_STATE_ENABLING:
+                        wifiState = "Wifi Enabling";
+                        //TODO; check if available here
+                        //wifiInfo = wifiManager.getConnectionInfo();
+
+                        break;
+                    case WifiManager.WIFI_STATE_DISABLING:
+                        wifiState = "Wifi Disabling";
+
+                        break;
+                    case WifiManager.WIFI_STATE_DISABLED:
+                        wifiState = "Wifi Disabled";
+
+                        break;
+                    case WifiManager.WIFI_STATE_UNKNOWN:
+                        wifiState = "Wifi Unknown";
+                        break;
+                }
+                propagateWifiInfoData(WifiInfoData.fromWifiInfo(wifiManager.getConnectionInfo(), wifiState, fiveGhzSupport), WifiInfoFragment.CUSTOM_WIFI_DATA_BROADCAST_OPERATION, WifiInfoFragment.CUSTOM_WIFI_DATA_BROADCAST_OPERATION_MESSAGE);
             }
         }
     };
@@ -60,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container);
@@ -108,39 +131,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!this.isBroadcastReceiverRegistered) {
-            this.isBroadcastReceiverRegistered = true;
-            Log.d("mainActivity", "onResume: registering receiver");
-            this.registerReceiver(this.broadcastReceiver, this.intentFilter);
-        }
+        Log.d("mainActivity", "onResume: registering receiver");
+        this.registerReceiver(this.broadcastReceiver, this.intentFilter);
+    }
 
-        wifiInfoDataListener.propagate(WifiInfoData.fromWifiInfo(wifiManager.getConnectionInfo()));
+    private void propagateWifiInfoData(final WifiInfoData wifiInfoData, final String operationName, final String operationMessageName) {
+        final Intent updateWifiViewIntent = new Intent(WifiInfoFragment.CUSTOM_WIFI_DATA_BROADCAST_OPERATION);
+        updateWifiViewIntent.putExtra(WifiInfoFragment.CUSTOM_WIFI_DATA_BROADCAST_OPERATION_MESSAGE, wifiInfoData);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(updateWifiViewIntent);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (this.isBroadcastReceiverRegistered) {
-            Log.d("mainActivity", "onPause: unregistering receiver");
-            this.isBroadcastReceiverRegistered = false;
-            this.unregisterReceiver(this.broadcastReceiver);
-        }
-    }
-
-    public WifiInfoDataListener getWifiInfoDataListener() {
-        return wifiInfoDataListener;
-    }
-
-    private static final class WifiInfoDataListener extends ConcurrentLinkedQueue<Updatable<WifiInfoData>> {
-        public void propagate(final WifiInfoData wifiInfoData) {
-            Log.d("", "propagate: " + this.size() + " of " + this.toString());
-            if (wifiInfoData == null)
-                throw new IllegalArgumentException("wifiInfoData was null.");
-            for (Updatable<WifiInfoData> u : this) {
-                if (u != null)
-                    u.call(wifiInfoData);
-            }
-        }
+        Log.d("mainActivity", "onPause: unregistering receiver");
+        this.unregisterReceiver(this.broadcastReceiver);
     }
 
     /**
@@ -148,26 +153,32 @@ public class MainActivity extends AppCompatActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        public MainActivity mainActivity;
+        private static final short PAGE_COUNT = 2;
 
-        public SectionsPagerAdapter(FragmentManager fm, final MainActivity mainActivity) {
+        public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
-            this.mainActivity = mainActivity;
         }
 
         @Override
         public Fragment getItem(int position) {
+            Toast.makeText(MainActivity.this, "Current pos: " + position, Toast.LENGTH_SHORT).show();
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            WifiInfoFragment wifiInfoData = WifiInfoFragment.newInstance();
-            this.mainActivity.getWifiInfoDataListener().add(wifiInfoData);
-            return wifiInfoData;
+            if (position == 0) {
+                WifiInfoFragment wifiInfoData = WifiInfoFragment.newInstance();
+                return wifiInfoData;
+            }
+            if (position == 1) {
+                WifiBroadcastChatFragment wifiBroadcastChatFragment = WifiBroadcastChatFragment.newInstance();
+                return wifiBroadcastChatFragment;
+            }
+            return WifiInfoFragment.newInstance();
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return PAGE_COUNT;
         }
     }
 }

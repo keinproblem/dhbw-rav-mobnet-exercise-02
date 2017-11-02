@@ -1,6 +1,9 @@
 package de.ravensburg.dhbw.friedrichshafen.mobnet.exercise02;
 
 import android.net.wifi.WifiInfo;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.text.format.Formatter;
 
 import java.io.Serializable;
 
@@ -23,9 +26,18 @@ public class WifiInfoData implements Serializable {
     private String wifiMAC;
 
 
-    public static WifiInfoData fromWifiInfo(final WifiInfo wifiInfo) {
+    public static WifiInfoData fromWifiInfo(@NonNull final WifiInfo wifiInfo, @NonNull final String wifiState, @NonNull String wifiFiveGhzSupport) {
         WifiInfoData wifiInfoData = new WifiInfoData();
         wifiInfoData.setWifiLinkSpeed(String.valueOf(wifiInfo.getLinkSpeed()) + Character.SPACE_SEPARATOR + WifiInfo.LINK_SPEED_UNITS);
+        wifiInfoData.setWifiBSSID(String.valueOf(wifiInfo.getBSSID()));
+        //Received signal strength indication
+        wifiInfoData.setWifiRSSID(String.valueOf(wifiInfo.getRssi()));
+        wifiInfoData.setWifiSSID(String.valueOf(wifiInfo.getSSID()));
+        wifiInfoData.setWifiState(wifiState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            wifiInfoData.setWifiCurrentFrequency(String.valueOf(wifiInfo.getFrequency()));
+        wifiInfoData.setWifiCurrentIpAddress(Formatter.formatIpAddress(wifiInfo.getIpAddress()));
+        wifiInfoData.setWifiMAC(String.valueOf(wifiInfo.getMacAddress()));
         return wifiInfoData;
     }
 

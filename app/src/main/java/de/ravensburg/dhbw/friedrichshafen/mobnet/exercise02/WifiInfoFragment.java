@@ -17,13 +17,38 @@ import android.widget.TextView;
  * Created by Noli on 31/10/2017.
  */
 
-public class WifiInfoFragment extends Fragment implements Updatable<WifiInfoData> {
+public class WifiInfoFragment extends Fragment {
+    public static final String CUSTOM_WIFI_DATA_BROADCAST_OPERATION = "wifi_data_update_broadcast_operation";
+    public static final String CUSTOM_WIFI_DATA_BROADCAST_OPERATION_MESSAGE = CUSTOM_WIFI_DATA_BROADCAST_OPERATION + "_message";
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
 
     private TextView linkSpeedTextView;
+    private BroadcastReceiver updateViewBroadcastReceiver;
+    private boolean isInitialized = false;
+
+    public WifiInfoFragment() {
+        this.updateViewBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (isInitialized) {
+                    WifiInfoData wifiInfoData = null;
+                    try {
+                        wifiInfoData = (WifiInfoData) intent.getExtras().get(CUSTOM_WIFI_DATA_BROADCAST_OPERATION_MESSAGE);
+                    } catch (ClassCastException cce) {
+                        //FIXME insert TAG
+                        Log.w("", "onReceive: ", cce);
+                    }
+
+                    if (wifiInfoData == null)
+                        return;
+                    updateTextViews(wifiInfoData);
+                }
+            }
+        };
+    }
 
     public static WifiInfoFragment newInstance() {
         WifiInfoFragment fragment = new WifiInfoFragment();
@@ -36,28 +61,25 @@ public class WifiInfoFragment extends Fragment implements Updatable<WifiInfoData
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         this.linkSpeedTextView = rootView.findViewById(R.id.textView16);
 
-        LocalBroadcastManager.getInstance(this.getContext()).registerReceiver(new BroadcastReceiver() {
-                                                                                  @Override
-                                                                                  public void onReceive(Context context, Intent intent) {
-                                                                                      updateTextViews((WifiInfoData) intent.getExtras().get("aaa"));
-                                                                                  }
-                                                                              },
-                new IntentFilter("my-event"));
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(this.getContext()).registerReceiver(
+                this.updateViewBroadcastReceiver, new IntentFilter("custom-event-name"));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this.getContext()).unregisterReceiver(
+                this.updateViewBroadcastReceiver);
     }
 
     private void updateTextViews(final WifiInfoData wifiInfoData) {
         Log.d("", "updateTextViews: updating");
         this.linkSpeedTextView.setText(wifiInfoData.getWifiLinkSpeed());
-    }
-
-    @Override
-    public void call(final WifiInfoData wifiInfoData) {
-        this.updateTextViews(wifiInfoData);
     }
 }
