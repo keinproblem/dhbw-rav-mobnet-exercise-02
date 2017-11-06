@@ -21,7 +21,7 @@
                 android:id="@+id/textView10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="Wifi State"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="112dp" />
 
@@ -29,7 +29,7 @@
                 android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="5GHz Support"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="16dp" />
 
@@ -37,7 +37,7 @@
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="Link Speed"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="54dp" />
 
@@ -45,7 +45,7 @@
                 android:id="@+id/textView9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="Current Frequency"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="93dp" />
 
@@ -53,7 +53,7 @@
                 android:id="@+id/textView6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="Ip Address"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="35dp" />
 
@@ -61,7 +61,31 @@
                 android:id="@+id/textView8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="BSSID"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="74dp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SSID"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="74dp" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AP MAC"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="74dp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rssid"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="74dp" />
 
@@ -75,50 +99,65 @@
             tools:layout_editor_absoluteY="111dp">
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/wifiStateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 tools:layout_editor_absoluteX="196dp"
                 tools:layout_editor_absoluteY="112dp" />
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/fiveGhzSupportTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 tools:layout_editor_absoluteX="196dp"
                 tools:layout_editor_absoluteY="35dp" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/linkSpeedTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 tools:layout_editor_absoluteX="196dp"
                 tools:layout_editor_absoluteY="16dp" />
 
             <TextView
-                android:id="@+id/textView14"
+                android:id="@+id/frequencyTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 tools:layout_editor_absoluteX="196dp"
                 tools:layout_editor_absoluteY="73dp" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/ipAddrTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 tools:layout_editor_absoluteX="196dp"
                 tools:layout_editor_absoluteY="54dp" />
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/bssidTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                tools:layout_editor_absoluteX="196dp"
+                tools:layout_editor_absoluteY="93dp" />
+
+            <TextView
+                android:id="@+id/ssidTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="196dp"
+                tools:layout_editor_absoluteY="93dp" />
+
+            <TextView
+                android:id="@+id/apMacTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="196dp"
+                tools:layout_editor_absoluteY="93dp" />
+
+            <TextView
+                android:id="@+id/rssidTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 tools:layout_editor_absoluteX="196dp"
                 tools:layout_editor_absoluteY="93dp" />
         </LinearLayout>

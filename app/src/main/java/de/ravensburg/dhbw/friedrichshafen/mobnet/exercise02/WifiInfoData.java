@@ -21,9 +21,9 @@ public class WifiInfoData implements Serializable {
     private String wifiCurrentFrequency;
     private String wifiCurrentIpAddress;
     private String wifiBSSID;
-    private String wifiRSSID;
     private String wifiSSID;
     private String wifiMAC;
+    private String wifiRSSID;
 
 
     public static WifiInfoData fromWifiInfo(@NonNull final WifiInfo wifiInfo, @NonNull final String wifiState, @NonNull String wifiFiveGhzSupport) {
@@ -38,6 +38,7 @@ public class WifiInfoData implements Serializable {
             wifiInfoData.setWifiCurrentFrequency(String.valueOf(wifiInfo.getFrequency()));
         wifiInfoData.setWifiCurrentIpAddress(Formatter.formatIpAddress(wifiInfo.getIpAddress()));
         wifiInfoData.setWifiMAC(String.valueOf(wifiInfo.getMacAddress()));
+        wifiInfoData.setWifiFiveGhzSupport(wifiFiveGhzSupport);
         return wifiInfoData;
     }
 
