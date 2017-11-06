@@ -49,40 +49,45 @@ public class WifiInfoFragment extends Fragment {
     private final BroadcastReceiver wifiStateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "onReceive: received broadcast");
-            if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction()) ||
-                    WifiManager.RSSI_CHANGED_ACTION.equals(intent.getAction()) ||
-                    WifiManager.SUPPLICANT_STATE_CHANGED_ACTION.equals(intent.getAction())) {
-                Log.i(TAG, String.format("onReceive: intent Action: [%s}", intent.getAction()));
-                if (wifiManager == null) {
-                    Log.d(TAG, "onReceive: wifiManager was null. The WifiManager might not be referenced yet.");
-                    return;
-                }
-                switch (wifiManager.getWifiState()) {
-                    case WifiManager.WIFI_STATE_ENABLED:
-                        wifiState = getResources().getString(R.string.wifi_state_enabled);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            fiveGhzSupport = wifiManager.is5GHzBandSupported() ? "Yes" : "No";
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i(TAG, "onReceive: received broadcast");
+                    if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction()) ||
+                            WifiManager.RSSI_CHANGED_ACTION.equals(intent.getAction()) ||
+                            WifiManager.SUPPLICANT_STATE_CHANGED_ACTION.equals(intent.getAction())) {
+                        Log.i(TAG, String.format("onReceive: intent Action: [%s}", intent.getAction()));
+                        if (wifiManager == null) {
+                            Log.d(TAG, "onReceive: wifiManager was null. The WifiManager might not be referenced yet.");
+                            return;
                         }
-                        break;
-                    case WifiManager.WIFI_STATE_ENABLING:
-                        wifiState = getResources().getString(R.string.wifi_state_enabling);
-                        break;
-                    case WifiManager.WIFI_STATE_DISABLING:
-                        wifiState = getResources().getString(R.string.wifi_state_disabling);
+                        switch (wifiManager.getWifiState()) {
+                            case WifiManager.WIFI_STATE_ENABLED:
+                                wifiState = getResources().getString(R.string.wifi_state_enabled);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    fiveGhzSupport = wifiManager.is5GHzBandSupported() ? "Yes" : "No";
+                                }
+                                break;
+                            case WifiManager.WIFI_STATE_ENABLING:
+                                wifiState = getResources().getString(R.string.wifi_state_enabling);
+                                break;
+                            case WifiManager.WIFI_STATE_DISABLING:
+                                wifiState = getResources().getString(R.string.wifi_state_disabling);
 
-                        break;
-                    case WifiManager.WIFI_STATE_DISABLED:
-                        wifiState = getResources().getString(R.string.wifi_state_disabled);
-                        break;
-                    case WifiManager.WIFI_STATE_UNKNOWN:
-                        wifiState = getResources().getString(R.string.wifi_state_unknown);
-                        break;
+                                break;
+                            case WifiManager.WIFI_STATE_DISABLED:
+                                wifiState = getResources().getString(R.string.wifi_state_disabled);
+                                break;
+                            case WifiManager.WIFI_STATE_UNKNOWN:
+                                wifiState = getResources().getString(R.string.wifi_state_unknown);
+                                break;
+                        }
+                        final WifiInfoData wifiInfoData = WifiInfoData.fromWifiInfo(wifiManager.getConnectionInfo(), wifiState, fiveGhzSupport);
+                        Log.d(TAG, String.format("onReceive: wifiInfoData: [%s]", wifiInfoData));
+                        updateTextViews(wifiInfoData);
+                    }
                 }
-                final WifiInfoData wifiInfoData = WifiInfoData.fromWifiInfo(wifiManager.getConnectionInfo(), wifiState, fiveGhzSupport);
-                Log.d(TAG, String.format("onReceive: wifiInfoData: [%s]", wifiInfoData));
-                updateTextViews(wifiInfoData);
-            }
+            });
         }
     };
 
