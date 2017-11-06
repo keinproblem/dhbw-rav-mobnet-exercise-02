@@ -1,7 +1,5 @@
 package de.ravensburg.dhbw.friedrichshafen.mobnet.exercise02;
 
-import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,14 +15,6 @@ import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
-    private final IntentFilter intentFilter = new IntentFilter();
-    private WifiManager wifiManager;
-    private WifiInfoData wifiInfoData;
-    private String wifiState = "Unavailable";
-    private String fiveGhzSupport = "Unknown";
-
-
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a

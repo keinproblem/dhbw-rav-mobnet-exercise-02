@@ -77,7 +77,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="AP MAC"
+                android:text="Adapter MAC"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="74dp" />
 
@@ -85,7 +85,7 @@
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Rssid"
+                android:text="Rssi"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="74dp" />
 
@@ -148,14 +148,14 @@
                 tools:layout_editor_absoluteY="93dp" />
 
             <TextView
-                android:id="@+id/apMacTextView"
+                android:id="@+id/adapterMacTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:layout_editor_absoluteX="196dp"
                 tools:layout_editor_absoluteY="93dp" />
 
             <TextView
-                android:id="@+id/rssidTextView"
+                android:id="@+id/rssiTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:layout_editor_absoluteX="196dp"

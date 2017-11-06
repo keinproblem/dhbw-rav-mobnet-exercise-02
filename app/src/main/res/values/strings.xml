@@ -1,5 +1,10 @@
 <resources>
-    <string name="app_name">exercise02</string>
+    <string name="app_name">Exercise 2</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="wifi_state_enabled">Wifi Enabled</string>
+    <string name="wifi_state_enabling">Wifi Enabling</string>
+    <string name="wifi_state_disabled">Wifi Disabled</string>
+    <string name="wifi_state_disabling">Wifi Disabling</string>
+    <string name="wifi_state_unknown">Unknown State</string>
 </resources>
