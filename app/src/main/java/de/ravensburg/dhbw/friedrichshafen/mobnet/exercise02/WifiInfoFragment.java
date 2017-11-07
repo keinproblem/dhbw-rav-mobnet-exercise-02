@@ -82,7 +82,7 @@ public class WifiInfoFragment extends Fragment {
                                 wifiState = getResources().getString(R.string.wifi_state_unknown);
                                 break;
                         }
-                        final WifiInfoData wifiInfoData = WifiInfoData.fromWifiInfo(wifiManager.getConnectionInfo(), wifiState, fiveGhzSupport);
+                        final WifiInfoData wifiInfoData = new WifiInfoData(wifiManager.getConnectionInfo(), wifiState, fiveGhzSupport);
                         Log.d(TAG, String.format("onReceive: wifiInfoData: [%s]", wifiInfoData));
                         updateTextViews(wifiInfoData);
                     }
