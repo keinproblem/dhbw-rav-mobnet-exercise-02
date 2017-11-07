@@ -48,7 +48,7 @@ public class WifiInfoFragment extends Fragment {
 
     private final BroadcastReceiver wifiStateBroadcastReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, final Intent intent) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

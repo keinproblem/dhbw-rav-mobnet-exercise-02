@@ -55,7 +55,7 @@ public class WifiBroadcastChatFragment extends Fragment {
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
         listView.setStackFromBottom(true);
 
-        chatlist = new ArrayList<>();
+        chatlist = new ArrayList<ChatMessage>();
         messageAdapter = new ChatAdapter(getActivity(), chatlist);
         listView.setAdapter(messageAdapter);
 
