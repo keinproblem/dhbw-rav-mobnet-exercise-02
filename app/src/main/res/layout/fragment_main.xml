@@ -102,6 +102,7 @@
                 android:id="@+id/wifiStateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Unavailable"
                 tools:layout_editor_absoluteX="196dp"
                 tools:layout_editor_absoluteY="112dp" />
 
